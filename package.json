@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/yunha11/insu#readme",
   "dependencies": {
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
     "request": "^2.88.0"
   }
 }
