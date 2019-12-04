@@ -22,4 +22,8 @@ app.get('/prac01', function (req, res) {
     res.render('ejs01')
 })
 
+app.get('/prac02', function (req, res) {
+    res.render('ejs02')
+})
+
 app.listen(3000)
