@@ -1,0 +1,22 @@
+{
+  "name": "insu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "hello.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yunha11/insu.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yunha11/insu/issues"
+  },
+  "homepage": "https://github.com/yunha11/insu#readme",
+  "dependencies": {
+    "request": "^2.88.0"
+  }
+}
