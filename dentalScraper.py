@@ -11,7 +11,11 @@ def rePlaceData(value):
         result += decodedNumber
 
 def getLinaData(name, birth, gender):
-    result = []
+    scrapingResult = {
+        'company': "라이나",
+        'price': 0,
+        'contents': []
+    }
     driver = webdriver.Chrome("./chromedriver")
     driver.get('https://direct.lina.co.kr/product/ess/dtc01/easy')
 
@@ -27,7 +31,7 @@ def getLinaData(name, birth, gender):
     driver.implicitly_wait(5)
     cost = driver.find_element_by_xpath('//*[@id="mo_amount_span"]').text
     resultValue = rePlaceData(cost)
-
+    scrapingResult['price'] = resultValue
     driver.find_element_by_xpath('//*[@id="openLayerplanPonA2"]').click()
     driver.implicitly_wait(3)
     nameDental = driver.find_element_by_xpath('//*[@id="planPonA2"]/div/div[2]/div/div/h2[1]').text
@@ -40,12 +44,15 @@ def getLinaData(name, birth, gender):
         if index != 0:
             # print value.find_elements_by_tag_name('th')[0].text
             contentsList.append(value.find_elements_by_tag_name('th')[0].text.encode('utf-8'))
-    result.append(contentsList)
-    return result
-    # 데이터입력후 산정된 보험료
+    scrapingResult['contents'] = contentsList
+    print scrapingResult
 
-def getAiaData(name, birth, gender):
-    result = []
+def getAIAData(name, birth, gender):
+    scrapingResult = {
+        'company': "라이나",
+        'price': 0,
+        'contents': []
+    }
 
     driver = webdriver.Chrome("./chromedriver")
     driver.get('https://www.aia.co.kr/ko/our-products/medical-protection/non-par-denteal-health-plan.html#')
@@ -62,8 +69,8 @@ def getAiaData(name, birth, gender):
 
     driver.find_element_by_xpath('//*[@id="btn806817556"]').click()
     cost = driver.find_element_by_xpath('//*[@id="premium-by-timespan-value"]').text
-    print(cost)
-    result.append(cost)
+    # print(cost)
+    scrapingResult['price'] = cost
 
     # showDetail = driver.find_element_by_xpath('//*[@id="the_fine_print"]/div[2]/div[1]/div[2]/div/a[2]/span')
     # showDetail.click()
@@ -77,9 +84,9 @@ def getAiaData(name, birth, gender):
             print value.find_elements_by_tag_name('td')[0].text
             contentsList.append(value.find_elements_by_tag_name('td')[0].text.encode('utf-8'))
 
-    result.append(contentsList)
-    print(result)
+    scrapingResult['contents'] = contentsList
+    print scrapingResult
 
 
-getAiaData('이윤하','19931123',2)
+getAIAData('이윤하','19931123',2)
 # print(getLinaData('이윤하', '931123', 2))
