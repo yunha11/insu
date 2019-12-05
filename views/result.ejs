@@ -13,6 +13,7 @@
   <!-- vendor css -->
   <link href="../../lib/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
   <link href="../../lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+  <script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
   <!-- DashForge CSS -->
   <link rel="stylesheet" href="../../assets/css/dashforge.css">
   <link rel="stylesheet" href="../../assets/css/dashforge.auth.css">
@@ -21,7 +22,7 @@
 <header class="navbar navbar-header navbar-header-fixed">
   <a href="" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
   <div class="navbar-brand">
-    <a href="/prac02" class="df-logo">KISA<span>Insure-Course</span></a>
+    <a href="../../index.html" class="df-logo">KISA<span>Insure-Course</span></a>
   </div><!-- navbar-brand -->
   <div id="navbarMenu" class="navbar-menu-wrapper">
     <div class="navbar-menu-header">
@@ -38,34 +39,7 @@
 </header><!-- navbar -->
 <div class="content content-fixed content-auth-alt">
   <div class="container ht-100p">
-    <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
-      <div class="wd-150 wd-sm-250 mg-b-30"><img src="/images/logo.png" class="img-fluid" alt=""></div>
-      <h4 class="tx-20 tx-sm-24">사용자 정보 입력</h4>
-      <p class="tx-color-03 mg-b-40">사용자의 정보를 입력해 주세요</p>
-      <div class="tx-13 tx-lg-14 mg-b-40">
-        <button id="male" class="btn btn-brand-02 d-inline-flex align-items-center">남자</button>
-        <button id="female" class="btn btn-white d-inline-flex align-items-center mg-l-5">여자</button>
-      </div>
-    </div>
-    <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
-      <div class="form-group">
-        <div class="d-flex justify-content-between mg-b-5">
-          <label class="mg-b-0-f">생년월일</label>
-        </div>
-        <input type="text" id="birthDay" class="form-control" placeholder="900101">
-      </div>
-      <div class="form-group">
-        <div class="d-flex justify-content-between mg-b-5">
-          <label class="mg-b-0-f">이름</label>
-        </div>
-        <input type="text" id="name" class="form-control" placeholder="홍길동">
-      </div>
-    </div>
-    <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
-      <div class="row">
-        <button class="btn btn-brand-01" id="sendData">전송하기</button>
-      </div>
-    </div>
+        <canvas id="myChart" width="400" height="400"></canvas>
   </div><!-- container -->
 </div><!-- content -->
 <footer class="footer">
@@ -87,21 +61,110 @@
 <script src="../../lib/js-cookie/js.cookie.js"></script>
 <script src="../../assets/js/dashforge.settings.js"></script>
 <script>
-  let name = "";
-  let birth = "";
-  let gender = 0;
-  $("#male").click(function () {
-    gender = 1;
-  })
-  $("#female").click(function () {
-    gender = 0;
-  })
-  $("#sendData").click(function () {
-    name = $("#name").val();
-    birth = $("#birthDay").val();
-    let qs = "?name="+ name +"&birth=" + birth + "&gender="+gender
-    window.location.href = "/result"+qs
-  })
+    var ctxLabel = [];
+    var ctxData1 = [];
+
+    function getQueryStringObject() {
+        var a = window.location.search.substr(1).split('&');
+        if (a == "") return {};
+        var b = {};
+        for (var i = 0; i < a.length; ++i) {
+            var p = a[i].split('=', 2);
+            if (p.length == 1)
+               b[p[0]] = "";
+            else
+                b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+        }
+        return b;
+    }
+    var qs = getQueryStringObject();
+    getInsureData();
+    function getInsureData(){
+        $.ajax({
+            url: 'http://localhost:5000/lina',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                name : qs.name,
+                birth : qs.birth,
+                gender : qs.gender
+            },
+            success: function (data) {
+                console.log(data);
+                ctxData1.push(data.price);
+                ctxLabel.push(data.company)
+                drawChart(data);
+                // drawTable(data);
+            }
+    });
+    $.ajax({
+            url: 'http://localhost:5000/aia',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                name : qs.name,
+                birth : qs.birth,
+                gender : qs.gender
+            },
+            success: function (data) {
+                console.log(data);
+                ctxData1.push(data.price);
+                ctxLabel.push(data.company)
+                drawChart(data);
+                // drawTable(data);
+            }
+    });
+    function drawChart(){
+        var ctxColor1 = '#001737';
+        var ctxColor2 = '#1ce1ac';
+        // Bar chart
+        var ctx1 = document.getElementById('myChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ctxLabel,
+                datasets: [{
+                    data: ctxData1,
+                    backgroundColor: ctxColor2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: false,
+                    labels: {
+                        display: false
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            color: '#e5e9f2'
+                        },
+                        ticks: {
+                            beginAtZero:true,
+                            fontSize: 10,
+                            fontColor: '#182b49',
+                            max: 60000
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        },
+                        barPercentage: 0.6,
+                        ticks: {
+                            beginAtZero:true,
+                            fontSize: 11,
+                            fontColor: '#182b49'
+                        }
+                    }]
+                    }
+                }
+                });
+            }
+        }
 </script>
 </body>
 </html>

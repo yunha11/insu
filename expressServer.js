@@ -15,7 +15,7 @@ app.get('/main', function (req, res) {
 })
 
 app.get('/result', function (req, res) {
-    res.send('result')
+    res.render('result')
 })
 
 // app.get('/prac', function (req, res) {
