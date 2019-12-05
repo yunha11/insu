@@ -17,12 +17,14 @@ driver = webdriver.Chrome("./chromedriver")
 
 driver.get('https://music.bugs.co.kr/chart?wl_ref=M_left_02_01')
 
-table = driver.find_element_by_class_name('list.trackList.byChart')
-tableBody = table.find_element_by_tag_name('tbody')
-trContents = tableBody.find_elements_by_tag_name('tr')
+# table = driver.find_element_by_class_name('list.trackList.byChart')
+# tableBody = table.find_element_by_tag_name('tbody')
+# trContents = tableBody.find_elements_by_tag_name('tr')
 
-for index, value in enumerate(trContents):
-    if index < 10:
-        name, artist = value.find_elements_by_tag_name('td')[3], value.find_elements_by_tag_name('td')[4]
-        print(index + 1, name.text, artist.text)
+# for index, value in enumerate(trContents):
+#     if index < 10:
+#         name, artist = value.find_elements_by_tag_name('td')[3], value.find_elements_by_tag_name('td')[4]
+#         print(index + 1, name.text, artist.text)
     
+tr = driver.find_elements_by_xpath('//*[@id="CHARTrealtime"]/table/tbody/tr[1]')
+print(tr)
