@@ -64,6 +64,7 @@
     <div class="ht-100p d-flex flex-column align-items-center justify-content-center">
       <div class="row">
         <button class="btn btn-brand-01" id="sendData">전송하기</button>
+        <button class="btn btn-brand-01" id="authBtn">인증받기</button>
       </div>
     </div>
   </div><!-- container -->
@@ -89,7 +90,7 @@
 <script>
   let name = "";
   let birth = "";
-  let gender = 0;
+  let gender = 2;
   $("#male").click(function () {
     gender = 1;
   })
@@ -101,6 +102,10 @@
     birth = $("#birthDay").val();
     let qs = "?name="+ name +"&birth=" + birth + "&gender="+gender
     window.location.href = "/result"+qs
+  })
+  $("#authBtn").click(function(){
+   var tmpWindow = window.open("about:blank");
+   tmpWindow.location = "https://testapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code&client_id=q7kH44ThJwjpvNRg0BbJvE1yxvx5X53DKz1rNgPF&redirect_uri=http://localhost:3000/authResult&scope=login inquiry transfer&state=12345678901234567890123456789012&auth_type=0";
   })
 </script>
 </body>

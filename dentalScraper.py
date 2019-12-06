@@ -94,7 +94,11 @@
 # -*- coding: utf-8 -*-
 import sys
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import ElementNotVisibleException
 import re
 
 def rePlaceData(value):
@@ -179,4 +183,45 @@ def getAIAData(name, birth, gender):
             print value.find_elements_by_tag_name('td')[0].text
             contentsList.append(value.find_elements_by_tag_name('td')[0].text.encode('utf-8'))
     scrapingResult['contents'] = contentsList
+    return scrapingResult
+
+def getAXAData(name, birth, gender):
+    driver = webdriver.Chrome('./chromedriver')
+    scrapingResult = {
+        'company': "AXA",
+        'price': 0,
+        'contents': []
+    }
+    driver.implicitly_wait(3)
+    driver.get('https://www.axa.co.kr/ActionControler.action?screenID=SHLI0000&actionID=I16#')
+    driver.implicitly_wait(3)
+    
+    birthBox = driver.find_element_by_xpath('//*[@id="if_02"]')
+    birthBox.send_keys(birth)
+    genderBox = driver.find_element_by_xpath('//*[@id="frmStep01"]/div[1]/table/tbody/tr/td/input[2]');
+    genderBox.send_keys(gender);
+
+    driver.find_element_by_xpath('//*[@id="frmStep01"]/div[2]/div').click()
+    driver.implicitly_wait(3)
+
+    delay = 3
+    WebDriverWait(driver, delay).until(
+        expected_conditions.invisibility_of_element(
+            (By.CSS_SELECTOR, "#overlay overlay_loading")
+                )
+    )
+
+    htmlResult = driver.find_element_by_xpath('//*[@id="paya_prem"]').text
+    resultValue = rePlaceData(htmlResult)
+    scrapingResult['price'] = resultValue
+
+    tableBody = driver.find_element_by_xpath('//*[@id="cov_disp"]')
+    rows = tableBody.find_elements_by_tag_name("tr")
+    contentsList = []
+    for index, value in enumerate(rows):
+        if index != 0:
+            print value.find_elements_by_tag_name('td')[0].text
+            contentsList.append(value.find_elements_by_tag_name('td')[0].text.encode('utf-8'))
+    scrapingResult['contents'] = contentsList
+    print(scrapingResult)
     return scrapingResult

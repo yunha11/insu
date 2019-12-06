@@ -114,6 +114,23 @@
                 // drawTable(data);
             }
     });
+    $.ajax({
+            url: 'http://localhost:5000/axa',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                name : qs.name,
+                birth : qs.birth,
+                gender : qs.gender
+            },
+            success: function (data) {
+                console.log(data);
+                ctxData1.push(data.price);
+                ctxLabel.push(data.company)
+                drawChart(data);
+                // drawTable(data);
+            }
+    });
     function drawChart(){
         var ctxColor1 = '#001737';
         var ctxColor2 = '#1ce1ac';

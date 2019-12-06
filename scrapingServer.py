@@ -21,4 +21,11 @@ def LinaData():
     gender = request.form['gender']
     return jsonify(scraper.getLinaData(name, birth, gender))
 
+@app.route('/axa',methods=['POST'])
+def AXAData():
+    name = request.form['name']
+    birth = request.form['birth']
+    gender = request.form['gender']
+    return jsonify(scraper.getAXAData(name, birth, gender))
+
 app.run()
